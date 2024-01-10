@@ -43,15 +43,12 @@ jobs:
           cd library
           echo ${PWD}
 
-      - name: Generate files
+      - name: Run schematic stuff (Generate files)
         run: |
-          cd ZSWatch-HW/project
-          kibot -g variant=${{ matrix.device_type }} -d ../production/${{ matrix.device_type }}
-      
-      - name: Upload Results
-        uses: actions/upload-artifact@v3
+          [ -f *.sch ] && kiplot  -d Fabrication -s run_drc,run_erc print_sch
+
+      - name: Retrieve results (Upload Results)
+        uses: actions/upload-artifact@v1
         with:
-          name: ${{ matrix.device_type }}
-          path: |
-            ZSWatch-HW/production
-          if-no-files-found: ignore
+          name: FabSch_Output
+          path: Fabrication
